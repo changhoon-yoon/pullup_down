@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>풀업 저항: 전기가 왜 GND로 갈까?</title>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; line-height: 1.8; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background: #f9f9f9; }
+        .box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .analogy { display: flex; align-items: center; justify-content: space-around; margin: 30px 0; background: #eef7ff; padding: 20px; border-radius: 10px; }
+        .concept { text-align: center; width: 45%; }
+        .arrow { font-size: 40px; color: #3498db; }
+        .highlight { color: #e74c3c; font-weight: bold; }
+        .flow-diagram { border: 2px dashed #bdc3c7; padding: 20px; margin: 20px 0; position: relative; }
+        .path-a { color: #3498db; font-weight: bold; } /* MCU Path */
+        .path-b { color: #27ae60; font-weight: bold; } /* GND Path */
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>"왜 전류가 GND로 빠져나갈까?"</h1>
+        <p>전기의 세계에는 아주 중요한 규칙이 하나 있습니다. 바로 <strong>"가장 쉬운 길(저항이 낮은 곳)로 간다"</strong>는 것입니다.</p>
+
+        <div class="flow-diagram">
+            <h3>⚡ 전기의 갈림길 (스위치를 눌렀을 때)</h3>
+            <p>1. <strong>MCU 방향:</strong> 울퉁불퉁하고 좁은 산길 (저항 매우 높음 ⛰️)</p>
+            <p>2. <strong>GND 방향:</strong> 8차선 초고속도로 (저항 거의 없음 🛣️)</p>
+            <p class="highlight">👉 결과: 전기는 100% 고속도로(GND)를 선택합니다!</p>
+        </div>
+
+        <h3>🌊 수도관 비유로 보기</h3>
+        <div class="analogy">
+            <div class="concept">
+                <strong>스위치 OFF</strong><br>
+                하수구가 막힘<br>
+                ⬇️<br>
+                물이 갈 곳이 없어<br>
+                <strong>센서(MCU)로 밀려감</strong><br>
+                (HIGH 인식)
+            </div>
+            <div class="arrow">➡️</div>
+            <div class="concept">
+                <strong>스위치 ON</strong><br>
+                하수구가 뻥 뚫림<br>
+                ⬇️<br>
+                물이 쉬운 길인<br>
+                <strong>하수구(GND)로 다 쏟아짐</strong><br>
+                (LOW 인식)
+            </div>
+        </div>
+
+        <div style="background: #fff3cd; padding: 15px; border-left: 5px solid #ffc107;">
+            <strong>핵심 정리:</strong><br>
+            전류가 GND로 빠져나간다는 것은, <strong>입력 단자(MCU)보다 GND가 훨씬 더 전기가 흐르기 쉬운 상태</strong>가 되었기 때문입니다. 그래서 MCU 쪽은 전압이 뚝 떨어지게 되고, 이를 0(LOW)이라고 읽는 것입니다.
+        </div>
+    </div>
+</body>
+</html>

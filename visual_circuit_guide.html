@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>풀업 저항: 전기의 길 찾기 시각화</title>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; background: #f0f2f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        
+        .diagram-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .base-image {
+            width: 100%;
+            display: block;
+            opacity: 0.6; /* 설명을 돋보이게 하기 위해 원본은 약간 흐리게 */
+        }
+
+        /* 시각적 도움 장치: 화살표와 라벨 */
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+        }
+
+        .marker {
+            position: absolute;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 14px;
+            color: white;
+        }
+
+        /* 전기가 내려오는 길 */
+        .flow-down {
+            position: absolute;
+            top: 10%; left: 9%;
+            width: 4px; height: 35%;
+            background: linear-gradient(to bottom, #3498db, #2ecc71);
+            box-shadow: 0 0 10px #2ecc71;
+        }
+
+        /* GND로 빠지는 강력한 흐름 */
+        .gnd-pull {
+            position: absolute;
+            top: 45%; left: 9%;
+            width: 4px; height: 45%;
+            background: #e74c3c;
+            box-shadow: 0 0 15px #e74c3c;
+        }
+
+        .label-easy { background: #e74c3c; top: 70%; left: 15%; }
+        .label-hard { background: #95a5a6; top: 40%; left: 25%; }
+        .label-start { background: #3498db; top: 5%; left: 15%; }
+
+        .explanation-box {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 5px solid #3498db;
+            border-radius: 5px;
+        }
+
+        .highlight-text { color: #e74c3c; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 "전류가 왜 GND로 가나요?" (시각적 해설)</h1>
+        
+        <div class="diagram-container">
+            <!-- 원본 이미지 -->
+            <img src="file:///C:/Users/changhoon/Downloads/Pull-up-and-Pull-down-Resistor.webp" class="base-image">
+            
+            <!-- 오버레이 도움 장치 -->
+            <div class="overlay">
+                <div class="flow-down"></div>
+                <div class="gnd-pull"></div>
+                
+                <div class="marker label-start">1. 물(전류) 출발! (+5V)</div>
+                <div class="marker label-hard">❌ MCU 쪽은 꽉 막힌 벽!</div>
+                <div class="marker label-easy">✅ GND는 뻥 뚫린 낭떠러지! (전류가 다 쏟아짐)</div>
+                
+                <!-- 화살표 (CSS로 간략 표현) -->
+                <div style="position:absolute; top:46%; left:9%; font-size:30px; color:#e74c3c;">▼</div>
+                <div style="position:absolute; top:43%; left:12%; font-size:30px; color:#95a5a6; transform:rotate(-90deg);">X</div>
+            </div>
+        </div>
+
+        <div class="explanation-box">
+            <div class="info-card">
+                <h3>🌊 물리적 관점 (수압)</h3>
+                <p>전기는 높은 곳(+5V)에서 낮은 곳(GND)으로 흐르는 물과 같습니다.</p>
+                <p>스위치가 닫히면 <strong>GND라는 거대한 배수구</strong>가 열리는 셈입니다. 물은 좁고 답답한 MCU 입구 대신, 넓고 시원한 배수구로 <span class="highlight-text">중력에 의해 쏟아져 내려갑니다.</span></p>
+            </div>
+            <div class="info-card" style="border-left-color: #2ecc71;">
+                <h3>🛣️ 전기적 관점 (저항)</h3>
+                <p><strong>MCU</strong>의 입력 핀은 내부적으로 엄청난 <strong>바위산</strong>과 같습니다. 반면 <strong>GND</strong>는 <strong>아스팔트 고속도로</strong>입니다.</p>
+                <p>전기(자동차)는 굳이 험한 바위산을 넘지 않고 <span class="highlight-text">고속도로가 열리는 순간 그쪽으로만 달립니다.</span></p>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px; padding: 20px; background: #fff3cd; border-radius: 10px; border: 1px solid #ffeeba;">
+            <strong>핵심 결론:</strong> 전류가 GND로 다 빠져나갔기 때문에, MCU 쪽에는 물(전압)이 고이지 못합니다. 그래서 MCU는 수압이 0이라고 느끼고 <strong>"LOW(0)"</strong>라고 읽는 것입니다.
+        </div>
+    </div>
+</body>
+</html>
