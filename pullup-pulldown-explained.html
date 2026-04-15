@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>풀업/풀다운 저항 — 전류의 물리적 흐름</title>
+<style>
+  :root{
+    --bg:#0f1419; --panel:#1a2230; --ink:#e8edf2; --dim:#8a98a8;
+    --wire:#3fb950; --hot:#ff6b4a; --cold:#4aa8ff; --accent:#ffd36b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",system-ui,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.65}
+  header{padding:28px 20px 8px;text-align:center}
+  h1{margin:0 0 6px;font-size:22px}
+  header p{margin:0;color:var(--dim);font-size:14px}
+  .wrap{max-width:1050px;margin:0 auto;padding:16px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:820px){.row{grid-template-columns:1fr}}
+  .card{background:var(--panel);border-radius:14px;padding:18px;
+        box-shadow:0 2px 14px rgba(0,0,0,.25)}
+  .card h2{margin:0 0 4px;font-size:17px}
+  .card .sub{color:var(--dim);font-size:13px;margin-bottom:10px}
+  svg{width:100%;height:auto;background:#0b1016;border-radius:8px;display:block}
+  .ctrl{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+  button{background:#243244;color:var(--ink);border:1px solid #33465e;
+         padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px}
+  button:hover{background:#2e4059}
+  .state{font-family:ui-monospace,Consolas,monospace;font-size:12px;
+         padding:4px 9px;border-radius:6px;background:#0b1016;color:var(--accent)}
+  .note{font-size:13px;color:var(--dim);margin-top:10px}
+  .lesson{background:var(--panel);border-radius:14px;padding:20px 22px;margin-top:18px}
+  .lesson h2{margin-top:0;font-size:18px}
+  .lesson h3{font-size:15px;margin:18px 0 6px;color:var(--accent)}
+  .lesson p, .lesson li{font-size:14px}
+  .lesson code{background:#0b1016;padding:2px 6px;border-radius:4px;
+               color:var(--accent);font-size:13px}
+  .analogy{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  @media(max-width:700px){.analogy{grid-template-columns:1fr}}
+  .analogy div{background:#0b1016;padding:10px 14px;border-radius:8px;font-size:13px}
+  .hi{color:var(--hot)} .lo{color:var(--cold)} .gn{color:var(--wire)}
+  .legend{display:flex;gap:14px;font-size:12px;color:var(--dim);margin-top:8px;flex-wrap:wrap}
+  .legend span::before{content:"●";margin-right:4px}
+  .legend .w::before{color:var(--wire)}
+  .legend .h::before{color:var(--hot)}
+  .legend .c::before{color:var(--cold)}
+</style>
+</head>
+<body>
+<header>
+  <h1>풀업 · 풀다운 저항의 물리적 전류 흐름</h1>
+  <p>스위치를 눌러서 전자가 어디로 흐르는지 직접 눈으로 확인하세요</p>
+</header>
+
+<div class="wrap">
+<div class="row">
+
+<!-- ============ PULL-UP ============ -->
+<div class="card">
+  <h2>풀업 (Pull-Up) 저항</h2>
+  <div class="sub">저항이 <b>+5V</b>에 연결 → 평소엔 <span class="hi">HIGH</span></div>
+  <svg viewBox="0 0 360 360" id="pu">
+    <!-- rails & labels -->
+    <text x="30" y="22" fill="#e8edf2" font-size="14" font-weight="bold">+5V</text>
+    <text x="20" y="352" fill="#e8edf2" font-size="12">GND</text>
+    <!-- ground symbol -->
+    <line x1="40" y1="335" x2="60" y2="335" stroke="#8a98a8" stroke-width="2"/>
+    <line x1="44" y1="340" x2="56" y2="340" stroke="#8a98a8" stroke-width="2"/>
+    <line x1="48" y1="345" x2="52" y2="345" stroke="#8a98a8" stroke-width="2"/>
+
+    <!-- main vertical wire 50,30 -> 50,325 -->
+    <path id="pu-wire" d="M50,30 L50,325" stroke="#3fb950" stroke-width="3" fill="none"/>
+    <!-- resistor box (zig) 50,60 -> 50,120 -->
+    <rect x="42" y="60" width="16" height="60" fill="#1a2230" stroke="#ff6b4a" stroke-width="2"/>
+    <text x="70" y="95" fill="#e8edf2" font-size="12">R (10kΩ)</text>
+
+    <!-- junction to MCU at y=180 -->
+    <path d="M50,180 L230,180" stroke="#3fb950" stroke-width="3" fill="none"/>
+    <circle cx="50" cy="180" r="3" fill="#3fb950"/>
+    <!-- MCU box -->
+    <rect x="230" y="150" width="100" height="60" fill="#1a2230" stroke="#ff6b4a" stroke-width="2"/>
+    <text x="280" y="186" fill="#e8edf2" font-size="13" text-anchor="middle">MCU</text>
+    <text x="280" y="202" fill="#8a98a8" font-size="10" text-anchor="middle">(input pin)</text>
+
+    <!-- switch: lever from (50,240) to (50,290) -->
+    <text x="65" y="248" fill="#e8edf2" font-size="11">Switch</text>
+    <circle cx="50" cy="240" r="3" fill="#e8edf2"/>
+    <circle cx="50" cy="290" r="3" fill="#e8edf2"/>
+    <line id="pu-lever" x1="50" y1="240" x2="75" y2="285" stroke="#e8edf2" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- moving electrons (hidden unless pressed) -->
+    <g id="pu-flow" style="display:none">
+      <circle r="4" fill="#ffd36b">
+        <animateMotion dur="2s" repeatCount="indefinite"
+          path="M50,30 L50,240 L50,290 L50,325"/>
+      </circle>
+      <circle r="4" fill="#ffd36b">
+        <animateMotion dur="2s" begin="0.5s" repeatCount="indefinite"
+          path="M50,30 L50,240 L50,290 L50,325"/>
+      </circle>
+      <circle r="4" fill="#ffd36b">
+        <animateMotion dur="2s" begin="1.0s" repeatCount="indefinite"
+          path="M50,30 L50,240 L50,290 L50,325"/>
+      </circle>
+      <circle r="4" fill="#ffd36b">
+        <animateMotion dur="2s" begin="1.5s" repeatCount="indefinite"
+          path="M50,30 L50,240 L50,290 L50,325"/>
+      </circle>
+    </g>
+  </svg>
+  <div class="ctrl">
+    <button onclick="toggle('pu')">스위치 누르기 / 떼기</button>
+    <span class="state" id="pu-state">열림 → MCU = HIGH (5V)</span>
+  </div>
+  <div class="legend"><span class="w">초록 = 도선</span><span class="h">주황 = 부품</span><span>노랑 = 전류(전자 흐름)</span></div>
+  <p class="note">스위치 <b>열림</b>: 전류는 저항을 지나 MCU 입력 핀을 <b>5V</b>로 살짝 끌어올림 (거의 안 흐름). <br>
+  스위치 <b>닫힘</b>: 전류가 저항 → 스위치 → GND로 쏟아져 내려가고, MCU 핀은 <b>0V</b>가 됨.</p>
+</div>
+
+<!-- ============ PULL-DOWN ============ -->
+<div class="card">
+  <h2>풀다운 (Pull-Down) 저항</h2>
+  <div class="sub">저항이 <b>GND</b>에 연결 → 평소엔 <span class="lo">LOW</span></div>
+  <svg viewBox="0 0 360 360" id="pd">
+    <text x="30" y="22" fill="#e8edf2" font-size="14" font-weight="bold">+5V</text>
+    <text x="20" y="352" fill="#e8edf2" font-size="12">GND</text>
+    <line x1="40" y1="335" x2="60" y2="335" stroke="#8a98a8" stroke-width="2"/>
+    <line x1="44" y1="340" x2="56" y2="340" stroke="#8a98a8" stroke-width="2"/>
+    <line x1="48" y1="345" x2="52" y2="345" stroke="#8a98a8" stroke-width="2"/>
+
+    <!-- main wire 50,30 -> 50,325 -->
+    <path d="M50,30 L50,325" stroke="#3fb950" stroke-width="3" fill="none"/>
+
+    <!-- switch up top: from (50,60) to (50,110) -->
+    <text x="65" y="88" fill="#e8edf2" font-size="11">Switch</text>
+    <circle cx="50" cy="60" r="3" fill="#e8edf2"/>
+    <circle cx="50" cy="110" r="3" fill="#e8edf2"/>
+    <line id="pd-lever" x1="50" y1="110" x2="75" y2="65" stroke="#e8edf2" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- junction to MCU at y=180 -->
+    <path d="M50,180 L230,180" stroke="#3fb950" stroke-width="3" fill="none"/>
+    <circle cx="50" cy="180" r="3" fill="#3fb950"/>
+    <rect x="230" y="150" width="100" height="60" fill="#1a2230" stroke="#ff6b4a" stroke-width="2"/>
+    <text x="280" y="186" fill="#e8edf2" font-size="13" text-anchor="middle">MCU</text>
+    <text x="280" y="202" fill="#8a98a8" font-size="10" text-anchor="middle">(input pin)</text>
+
+    <!-- resistor 50,230 -> 50,290 -->
+    <rect x="42" y="230" width="16" height="60" fill="#1a2230" stroke="#ff6b4a" stroke-width="2"/>
+    <text x="70" y="265" fill="#e8edf2" font-size="12">R (10kΩ)</text>
+
+    <!-- flow hidden by default -->
+    <g id="pd-flow" style="display:none">
+      <circle r="4" fill="#ffd36b">
+        <animateMotion dur="2s" repeatCount="indefinite" path="M50,30 L50,325"/>
+      </circle>
+      <circle r="4" fill="#ffd36b">
+        <animateMotion dur="2s" begin="0.5s" repeatCount="indefinite" path="M50,30 L50,325"/>
+      </circle>
+      <circle r="4" fill="#ffd36b">
+        <animateMotion dur="2s" begin="1.0s" repeatCount="indefinite" path="M50,30 L50,325"/>
+      </circle>
+      <circle r="4" fill="#ffd36b">
+        <animateMotion dur="2s" begin="1.5s" repeatCount="indefinite" path="M50,30 L50,325"/>
+      </circle>
+    </g>
+  </svg>
+  <div class="ctrl">
+    <button onclick="toggle('pd')">스위치 누르기 / 떼기</button>
+    <span class="state" id="pd-state">열림 → MCU = LOW (0V)</span>
+  </div>
+  <div class="legend"><span class="w">초록 = 도선</span><span class="h">주황 = 부품</span><span>노랑 = 전류(전자 흐름)</span></div>
+  <p class="note">스위치 <b>열림</b>: 위쪽이 막혀 전류가 못 내려옴. 저항이 MCU 핀을 <b>0V</b>로 끌어내림.<br>
+  스위치 <b>닫힘</b>: +5V → 스위치 → MCU 핀 → 저항 → GND로 흐름. MCU 핀은 <b>5V</b>.</p>
+</div>
+
+</div>
+
+<!-- ============ 물리 레슨 ============ -->
+<div class="lesson">
+  <h2>🧠 물리 기초 — 왜 이렇게 되는지 차근차근</h2>
+
+  <h3>1. 전압은 "높이", 전류는 "물의 흐름"</h3>
+  <p>전기 회로를 이해하는 가장 쉬운 비유는 <b>물</b>입니다.</p>
+  <div class="analogy">
+    <div>💧 <b>수도관 비유</b><br>
+    높은 물탱크 → 수도관 → 낮은 배수구<br>
+    물은 <b>높은 곳에서 낮은 곳</b>으로 흐릅니다.</div>
+    <div>⚡ <b>전기 회로</b><br>
+    +5V (높음) → 도선 → GND 0V (낮음)<br>
+    전류는 <b>전압이 높은 곳에서 낮은 곳</b>으로 흐릅니다.</div>
+  </div>
+  <ul>
+    <li><b>전압(V)</b> = 두 지점 사이의 "높이 차이". 단위는 볼트.</li>
+    <li><b>전류(I)</b> = 실제로 흐르는 전자의 양. 단위는 암페어(A).</li>
+    <li><b>저항(R)</b> = 흐름을 방해하는 좁은 관. 단위는 옴(Ω).</li>
+  </ul>
+
+  <h3>2. 옴의 법칙: V = I × R</h3>
+  <p>이 세 가지는 공식 하나로 묶입니다. <code>V = I × R</code> — 전압은 전류 곱하기 저항.<br>
+  수도관 비유로: 높이 차가 클수록(V↑) 물이 많이 흐르고(I↑), 관이 좁을수록(R↑) 덜 흐릅니다.</p>
+
+  <h3>3. "떠 있는 핀(floating)" 문제 — 왜 저항이 필요한가</h3>
+  <p>MCU(마이크로컨트롤러)의 입력 핀은 매우 민감한 <b>안테나</b>와 같습니다.
+  아무 것에도 연결되지 않으면 공기 중 전자기파를 잡아서 <span class="hi">HIGH</span>도 <span class="lo">LOW</span>도 아닌 <b>애매한 상태</b>가 됩니다. 버튼이 안 눌렸는데 눌린 것처럼 오동작하죠.</p>
+  <p>그래서 평소 상태를 <b>확실히 정해 주는 저항</b>이 필요합니다:</p>
+  <ul>
+    <li><b>풀업 저항</b>: 평소 핀을 <span class="hi">5V 쪽으로 당겨둠</span> → 버튼 누르면 0V</li>
+    <li><b>풀다운 저항</b>: 평소 핀을 <span class="lo">0V 쪽으로 당겨둠</span> → 버튼 누르면 5V</li>
+  </ul>
+
+  <h3>4. 왜 저항값이 10kΩ쯤인가? (에너지 낭비)</h3>
+  <p>저항이 너무 작으면(예: 100Ω): 버튼을 누를 때 전류가 <code>5V / 100Ω = 50mA</code>나 흘러 전력 낭비.<br>
+  저항이 너무 크면(예: 10MΩ): 흐름이 거의 없어서 잡음을 못 이김.<br>
+  10kΩ은 황금 비율 — <code>5V / 10kΩ = 0.5mA</code>로 낭비 적고 잡음에도 강합니다.</p>
+
+  <h3>5. 전자는 사실 반대 방향으로 흐른다 (재미있는 진실)</h3>
+  <p>교과서에서 "전류는 +에서 −로 흐른다"고 합니다. 이건 <b>약속</b>입니다.
+  실제 전자(−전하)는 반대로 <b>−에서 +로</b> 움직여요. 벤자민 프랭클린이 전자를 알기 전에 방향을 정해버려서 생긴 역사적 실수인데, 이제 와서 바꾸면 혼란스러워 그냥 씁니다. 회로 분석에는 "전류 방향"만 쓰면 충분합니다.</p>
+
+  <h3>6. 다음에 공부하면 좋은 것들</h3>
+  <ul>
+    <li><b>키르히호프 법칙</b> — 갈림길에서 전류가 어떻게 나뉘는지 (물 비유로 바로 이해됨)</li>
+    <li><b>커패시터</b> — 전기를 잠깐 저장하는 "물탱크"</li>
+    <li><b>디지털 HIGH/LOW 임계값</b> — MCU는 대략 2V 이상이면 HIGH, 0.8V 이하면 LOW로 인식</li>
+    <li><b>풀업 내장</b> — 대부분의 MCU(아두이노 포함)는 내부에 풀업 저항이 있어서 <code>INPUT_PULLUP</code> 한 줄로 켤 수 있음</li>
+  </ul>
+
+  <h3>💡 기억해둘 한 줄</h3>
+  <p><b>"저항은 전류를 막는 게 아니라, 전압을 원하는 높이로 잡아두는 도구다."</b><br>
+  이 한 문장이 풀업·풀다운의 전부입니다.</p>
+</div>
+</div>
+
+<script>
+  const st = {pu:false, pd:false};
+  function toggle(id){
+    st[id] = !st[id];
+    const pressed = st[id];
+    const flow = document.getElementById(id+'-flow');
+    const lever = document.getElementById(id+'-lever');
+    const state = document.getElementById(id+'-state');
+
+    if(id==='pu'){
+      // pull-up: closed switch = current flows, MCU LOW
+      if(pressed){
+        lever.setAttribute('x2','50'); lever.setAttribute('y2','290');
+        flow.style.display='inline';
+        state.textContent='닫힘 → MCU = LOW (0V)';
+        state.style.color='#4aa8ff';
+      } else {
+        lever.setAttribute('x2','75'); lever.setAttribute('y2','285');
+        flow.style.display='none';
+        state.textContent='열림 → MCU = HIGH (5V)';
+        state.style.color='#ffd36b';
+      }
+    } else {
+      // pull-down: closed switch = current flows, MCU HIGH
+      if(pressed){
+        lever.setAttribute('x2','50'); lever.setAttribute('y2','60');
+        flow.style.display='inline';
+        state.textContent='닫힘 → MCU = HIGH (5V)';
+        state.style.color='#ff6b4a';
+      } else {
+        lever.setAttribute('x2','75'); lever.setAttribute('y2','65');
+        flow.style.display='none';
+        state.textContent='열림 → MCU = LOW (0V)';
+        state.style.color='#4aa8ff';
+      }
+    }
+  }
+</script>
+</body>
+</html>
